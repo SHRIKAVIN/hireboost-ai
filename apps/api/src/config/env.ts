@@ -25,14 +25,24 @@ const envSchema = z.object({
   MONGODB_URI: z.string().min(1, 'MONGODB_URI is required'),
   MONGODB_DB_NAME: z.string().default('hireboost'),
 
-  JWT_SECRET: z.string().min(16, 'JWT_SECRET should be at least 16 characters').optional(),
-  JWT_EXPIRES_IN: z.string().default('7d'),
-  JWT_REFRESH_SECRET: z.string().min(16).optional(),
+  WEB_APP_URL: z.string().url().default('http://localhost:5173'),
+
+  JWT_SECRET: z.string().min(16, 'JWT_SECRET should be at least 16 characters'),
+  JWT_EXPIRES_IN: z.string().default('15m'),
+  JWT_REFRESH_SECRET: z.string().min(16, 'JWT_REFRESH_SECRET should be at least 16 characters'),
   JWT_REFRESH_EXPIRES_IN: z.string().default('30d'),
+  JWT_ISSUER: z.string().default('hireboost-ai'),
+  JWT_AUDIENCE: z.string().default('hireboost-web'),
+
+  COOKIE_DOMAIN: z.string().optional(),
+  COOKIE_SECURE: booleanish.default(false),
+  COOKIE_SAME_SITE: z.enum(['lax', 'strict', 'none']).default('lax'),
 
   GOOGLE_CLIENT_ID: z.string().optional(),
   GOOGLE_CLIENT_SECRET: z.string().optional(),
   GOOGLE_REDIRECT_URI: z.string().url().optional(),
+  GOOGLE_OAUTH_SUCCESS_PATH: z.string().startsWith('/').default('/auth/callback'),
+  GOOGLE_OAUTH_FAILURE_PATH: z.string().startsWith('/').default('/login'),
 
   AI_PROVIDER: z.enum(['gemini', 'openai']).default('gemini'),
   GEMINI_API_KEY: z.string().optional(),
@@ -67,3 +77,8 @@ export type AppEnv = typeof env;
 export const isProd = env.NODE_ENV === 'production';
 export const isDev = env.NODE_ENV === 'development';
 export const isTest = env.NODE_ENV === 'test';
+
+export const isGoogleOAuthConfigured =
+  Boolean(env.GOOGLE_CLIENT_ID) &&
+  Boolean(env.GOOGLE_CLIENT_SECRET) &&
+  Boolean(env.GOOGLE_REDIRECT_URI);

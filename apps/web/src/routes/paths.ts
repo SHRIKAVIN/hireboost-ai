@@ -12,6 +12,7 @@ export const ROUTES = {
   auth: {
     login: '/login',
     register: '/register',
+    oauthCallback: '/auth/callback',
   },
   app: {
     dashboard: '/app/dashboard',

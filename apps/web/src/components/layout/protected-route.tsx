@@ -1,25 +1,45 @@
+import { useEffect, useRef, useState } from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
 import { PageLoader } from '@/components/shared/page-loader';
+import { authApi } from '@/features/auth/api/auth-api';
 import { ROUTES } from '@/routes/paths';
 import { useAuthStore } from '@/store/auth-store';
 
 /**
- * Phase 2: in dev we treat the user as authenticated even without a session
- * so layouts and routes are easy to inspect. Phase 4 flips this to a strict
- * check against `isAuthenticated`.
+ * Guards every authenticated route. On mount it tries to silently refresh
+ * the session via the HttpOnly refresh-token cookie if there's no in-memory
+ * access token, so a hard reload doesn't bounce the user to /login.
  */
-const PHASE_2_DEV_BYPASS = import.meta.env.DEV;
-
 export function ProtectedRoute() {
-  const { isAuthenticated, isHydrated } = useAuthStore();
+  const { isAuthenticated, accessToken, isHydrated, setSession, clear } = useAuthStore();
   const location = useLocation();
+  const [bootstrapping, setBootstrapping] = useState(false);
+  const triedRef = useRef(false);
 
-  if (!isHydrated) {
+  useEffect(() => {
+    if (!isHydrated) return;
+    if (accessToken || triedRef.current) return;
+    triedRef.current = true;
+    setBootstrapping(true);
+
+    (async () => {
+      try {
+        const session = await authApi.refresh();
+        setSession(session);
+      } catch {
+        clear();
+      } finally {
+        setBootstrapping(false);
+      }
+    })();
+  }, [isHydrated, accessToken, setSession, clear]);
+
+  if (!isHydrated || bootstrapping) {
     return <PageLoader label="Restoring session…" />;
   }
 
-  if (!isAuthenticated && !PHASE_2_DEV_BYPASS) {
+  if (!isAuthenticated) {
     return <Navigate to={ROUTES.auth.login} replace state={{ from: location }} />;
   }
 

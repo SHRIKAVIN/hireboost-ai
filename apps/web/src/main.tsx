@@ -4,8 +4,11 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
 
+import { bootstrapAuth } from '@/app/auth-bootstrap';
 import { AppProviders } from '@/app/providers';
 import { router } from '@/routes/router';
+
+bootstrapAuth();
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
