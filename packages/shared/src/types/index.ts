@@ -42,15 +42,28 @@ export interface UserProfile {
   summary: string;
 }
 
+export type AuthProvider = 'local' | 'google';
+
 export interface User {
   id: string;
   name: string;
   email: string;
   avatarUrl?: string;
   role: UserRole;
+  provider: AuthProvider;
+  emailVerified: boolean;
   profile: UserProfile;
   createdAt: string;
   updatedAt: string;
+}
+
+/** Successful login / register / refresh response. */
+export interface AuthSession {
+  user: User;
+  accessToken: string;
+  /** Seconds until the access token expires. */
+  expiresIn: number;
+  tokenType: 'Bearer';
 }
 
 export interface ResumeBasics {

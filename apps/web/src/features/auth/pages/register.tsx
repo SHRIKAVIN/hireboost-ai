@@ -9,11 +9,16 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { formatApiError } from '@/lib/api-client';
 import { ROUTES } from '@/routes/paths';
+
+import { googleOAuthStartUrl } from '../api/auth-api';
+import { useRegisterMutation } from '../hooks/use-auth';
 
 export function RegisterPage() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const registerMutation = useRegisterMutation();
 
   const {
     register,
@@ -24,13 +29,19 @@ export function RegisterPage() {
     defaultValues: { name: '', email: '', password: '', confirmPassword: '' },
   });
 
-  const onSubmit = handleSubmit(async () => {
-    await new Promise((r) => setTimeout(r, 600));
-    toast.success('Account created', {
-      description: 'Phase 2 stub — auth wiring lands in Phase 4.',
-    });
-    navigate(ROUTES.app.dashboard);
+  const onSubmit = handleSubmit(async (input) => {
+    try {
+      const session = await registerMutation.mutateAsync(input);
+      toast.success(`Welcome aboard, ${session.user.name.split(' ')[0]}!`);
+      navigate(ROUTES.app.dashboard, { replace: true });
+    } catch (err) {
+      toast.error('Sign up failed', { description: formatApiError(err) });
+    }
   });
+
+  const handleGoogle = () => {
+    window.location.href = googleOAuthStartUrl();
+  };
 
   return (
     <div className="space-y-7">
@@ -39,6 +50,20 @@ export function RegisterPage() {
         <p className="text-sm text-muted-foreground">
           Free to start. No credit card. Tailor your first resume in minutes.
         </p>
+      </div>
+
+      <Button variant="outline" className="w-full" type="button" onClick={handleGoogle}>
+        <GoogleIcon className="h-4 w-4" />
+        <span>Continue with Google</span>
+      </Button>
+
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t border-border" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase tracking-wide">
+          <span className="bg-background px-3 text-muted-foreground">or with email</span>
+        </div>
       </div>
 
       <form className="space-y-5" onSubmit={onSubmit} noValidate>
@@ -109,7 +134,13 @@ export function RegisterPage() {
           </div>
         </div>
 
-        <Button type="submit" variant="primary" size="lg" className="w-full" loading={isSubmitting}>
+        <Button
+          type="submit"
+          variant="primary"
+          size="lg"
+          className="w-full"
+          loading={isSubmitting || registerMutation.isPending}
+        >
           Create account
         </Button>
 
@@ -133,6 +164,29 @@ export function RegisterPage() {
         </Link>
       </p>
     </div>
+  );
+}
+
+function GoogleIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" aria-hidden>
+      <path
+        fill="#FFC107"
+        d="M21.35 11.1H12v3.85h5.34c-.5 2.5-2.6 3.85-5.34 3.85a6 6 0 0 1 0-12 5.5 5.5 0 0 1 3.85 1.5l2.65-2.65A9.4 9.4 0 0 0 12 2.6a9.4 9.4 0 1 0 9.35 8.5z"
+      />
+      <path
+        fill="#FF3D00"
+        d="m3.15 7.35 3.15 2.3A5.5 5.5 0 0 1 12 6.8a5.5 5.5 0 0 1 3.85 1.5l2.65-2.65A9.4 9.4 0 0 0 12 2.6a9.4 9.4 0 0 0-8.85 4.75z"
+      />
+      <path
+        fill="#4CAF50"
+        d="M12 21.4a9.4 9.4 0 0 0 6.3-2.4l-2.9-2.45a5.5 5.5 0 0 1-3.4 1.1c-2.7 0-4.85-1.35-5.34-3.85l-3.1 2.4A9.4 9.4 0 0 0 12 21.4z"
+      />
+      <path
+        fill="#1976D2"
+        d="M21.35 11.1H12v3.85h5.34a4.6 4.6 0 0 1-1.94 2.6l2.9 2.45c1.7-1.55 2.8-3.95 2.8-6.6 0-.65-.07-1.3-.2-1.9z"
+      />
+    </svg>
   );
 }
 

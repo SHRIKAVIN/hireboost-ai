@@ -11,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useLogoutMutation } from '@/features/auth/hooks/use-auth';
 import { ROUTES } from '@/routes/paths';
 import { useAuthStore } from '@/store/auth-store';
 
@@ -25,16 +26,16 @@ function initialsFromName(name: string): string {
 
 export function UserMenu() {
   const user = useAuthStore((s) => s.user);
-  const clear = useAuthStore((s) => s.clear);
   const navigate = useNavigate();
+  const logoutMutation = useLogoutMutation();
 
   const display = user
     ? { name: user.name, email: user.email, avatarUrl: user.avatarUrl }
     : { name: 'Guest', email: 'guest@hireboost.ai', avatarUrl: undefined };
 
-  const onLogout = () => {
-    clear();
-    navigate(ROUTES.auth.login);
+  const onLogout = async () => {
+    await logoutMutation.mutateAsync();
+    navigate(ROUTES.auth.login, { replace: true });
   };
 
   return (

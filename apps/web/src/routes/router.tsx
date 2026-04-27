@@ -20,6 +20,7 @@ const ContactPage = lazy(() => import('@/features/marketing/pages/contact'));
 // Auth
 const LoginPage = lazy(() => import('@/features/auth/pages/login'));
 const RegisterPage = lazy(() => import('@/features/auth/pages/register'));
+const OAuthCallbackPage = lazy(() => import('@/features/auth/pages/oauth-callback'));
 
 // App (private)
 const DashboardPage = lazy(() => import('@/features/dashboard/pages/dashboard'));
@@ -59,6 +60,7 @@ export const router = createBrowserRouter([
       { path: ROUTES.auth.register, element: withSuspense(<RegisterPage />) },
     ],
   },
+  { path: ROUTES.auth.oauthCallback, element: withSuspense(<OAuthCallbackPage />) },
   {
     element: <ProtectedRoute />,
     children: [

@@ -151,8 +151,8 @@ See `/.env.example` for the canonical list. Per-app `.env.example` files appear 
 | 1     | Monorepo setup (workspaces, tsconfig, scripts)  | ✅ Done      |
 | 2     | Frontend foundation (Vite + Tailwind + shadcn)  | ✅ Done      |
 | 3     | Backend foundation (Express + Mongo + logger)   | ✅ Done      |
-| 4     | Authentication (JWT, Google OAuth scaffold)     | ⏳ Next      |
-| 5     | Job Description Intake                          | ⏳ Pending   |
+| 4     | Authentication (JWT + Google OAuth, refresh)    | ✅ Done      |
+| 5     | Job Description Intake                          | ⏳ Next      |
 | 6     | Resume Upload + Parsing                         | ⏳ Pending   |
 | 7     | ATS Analyzer engine                             | ⏳ Pending   |
 | 8     | AI Resume Enhancer (Gemini/OpenAI provider)     | ⏳ Pending   |

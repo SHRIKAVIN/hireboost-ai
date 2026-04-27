@@ -1,4 +1,4 @@
-import type { User } from '@hireboost/shared';
+import type { AuthSession, User } from '@hireboost/shared';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -7,16 +7,12 @@ interface AuthState {
   accessToken: string | null;
   isAuthenticated: boolean;
   isHydrated: boolean;
-  setSession: (payload: { user: User; accessToken: string }) => void;
+  setSession: (session: AuthSession) => void;
   setUser: (user: User | null) => void;
   clear: () => void;
   setHydrated: () => void;
 }
 
-/**
- * Phase 2: store + persistence shell only — login/logout flows hook into
- * this in Phase 4 once /auth/login + /auth/me are real.
- */
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
@@ -24,8 +20,12 @@ export const useAuthStore = create<AuthState>()(
       accessToken: null,
       isAuthenticated: false,
       isHydrated: false,
-      setSession: ({ user, accessToken }) =>
-        set({ user, accessToken, isAuthenticated: true }),
+      setSession: (session) =>
+        set({
+          user: session.user,
+          accessToken: session.accessToken,
+          isAuthenticated: true,
+        }),
       setUser: (user) => set({ user, isAuthenticated: !!user }),
       clear: () => set({ user: null, accessToken: null, isAuthenticated: false }),
       setHydrated: () => set({ isHydrated: true }),
@@ -43,3 +43,8 @@ export const useAuthStore = create<AuthState>()(
     },
   ),
 );
+
+/** Read-only snapshot of the current access token (used by axios interceptor). */
+export function readAccessToken(): string | null {
+  return useAuthStore.getState().accessToken;
+}

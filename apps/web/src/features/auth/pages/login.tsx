@@ -1,19 +1,43 @@
 import { loginSchema, type LoginInput } from '@hireboost/shared';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Eye, EyeOff } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { formatApiError } from '@/lib/api-client';
 import { ROUTES } from '@/routes/paths';
+
+import { googleOAuthStartUrl } from '../api/auth-api';
+import { useLoginMutation } from '../hooks/use-auth';
+
+const OAUTH_ERROR_MESSAGES: Record<string, string> = {
+  google_oauth_not_configured:
+    'Google sign-in is not configured on this server yet. Use email and password.',
+  invalid_state: 'Sign-in session expired. Please try again.',
+  missing_code: 'Google did not return a code. Please try again.',
+  oauth_failed: 'Google sign-in failed. Please try again.',
+};
 
 export function LoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
   const [showPassword, setShowPassword] = useState(false);
+  const loginMutation = useLoginMutation();
+
+  useEffect(() => {
+    const oauthError = searchParams.get('error');
+    if (oauthError) {
+      toast.error('Sign-in failed', {
+        description: OAUTH_ERROR_MESSAGES[oauthError] ?? 'Please try again.',
+      });
+    }
+  }, [searchParams]);
 
   const {
     register,
@@ -24,14 +48,22 @@ export function LoginPage() {
     defaultValues: { email: '', password: '' },
   });
 
-  const onSubmit = handleSubmit(async () => {
-    // Phase 2: UI only — Phase 4 wires this to /api/v1/auth/login.
-    await new Promise((r) => setTimeout(r, 500));
-    toast.success('Signed in', {
-      description: 'Phase 2 stub — auth wiring lands in Phase 4.',
-    });
-    navigate(ROUTES.app.dashboard);
+  const onSubmit = handleSubmit(async (input) => {
+    try {
+      const session = await loginMutation.mutateAsync(input);
+      toast.success(`Welcome back, ${session.user.name.split(' ')[0]}`);
+      const redirectTo =
+        (location.state as { from?: { pathname?: string } } | null)?.from?.pathname ??
+        ROUTES.app.dashboard;
+      navigate(redirectTo, { replace: true });
+    } catch (err) {
+      toast.error('Sign-in failed', { description: formatApiError(err) });
+    }
   });
+
+  const handleGoogle = () => {
+    window.location.href = googleOAuthStartUrl();
+  };
 
   return (
     <div className="space-y-7">
@@ -42,12 +74,14 @@ export function LoginPage() {
         </p>
       </div>
 
-      <Button variant="outline" className="w-full" type="button" disabled>
+      <Button
+        variant="outline"
+        className="w-full"
+        type="button"
+        onClick={handleGoogle}
+      >
         <GoogleIcon className="h-4 w-4" />
         <span>Continue with Google</span>
-        <span className="ml-1 rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-          Soon
-        </span>
       </Button>
 
       <div className="relative">
@@ -103,7 +137,13 @@ export function LoginPage() {
           )}
         </div>
 
-        <Button type="submit" variant="primary" size="lg" className="w-full" loading={isSubmitting}>
+        <Button
+          type="submit"
+          variant="primary"
+          size="lg"
+          className="w-full"
+          loading={isSubmitting || loginMutation.isPending}
+        >
           Sign in
         </Button>
       </form>
