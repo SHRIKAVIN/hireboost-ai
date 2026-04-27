@@ -1,0 +1,44 @@
+{
+  "name": "hireboost-ai",
+  "version": "0.1.0",
+  "private": true,
+  "description": "HireBoost AI — ATS Resume Review, AI Resume Enhancer, Resume Builder, and Job Matcher (Production-grade PWA monorepo).",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=20.10.0",
+    "npm": ">=10.0.0"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace @hireboost/web",
+    "dev:all": "npm-run-all --parallel dev:web dev:api",
+    "dev:web": "npm run dev --workspace @hireboost/web",
+    "dev:api": "npm run dev --workspace @hireboost/api",
+    "build": "npm-run-all build:shared build:api build:web",
+    "build:shared": "npm run build --workspace @hireboost/shared",
+    "build:web": "npm run build --workspace @hireboost/web",
+    "build:api": "npm run build --workspace @hireboost/api",
+    "start:api": "npm run start --workspace @hireboost/api",
+    "preview:web": "npm run preview --workspace @hireboost/web",
+    "lint": "npm-run-all --parallel lint:web lint:api lint:shared",
+    "lint:web": "npm run lint --workspace @hireboost/web --if-present",
+    "lint:api": "npm run lint --workspace @hireboost/api --if-present",
+    "lint:shared": "npm run lint --workspace @hireboost/shared --if-present",
+    "typecheck": "npm-run-all --parallel typecheck:web typecheck:api typecheck:shared",
+    "typecheck:web": "npm run typecheck --workspace @hireboost/web --if-present",
+    "typecheck:api": "npm run typecheck --workspace @hireboost/api --if-present",
+    "typecheck:shared": "npm run typecheck --workspace @hireboost/shared --if-present",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,css,html}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,css,html}\"",
+    "clean": "rimraf \"apps/*/dist\" \"packages/*/dist\" \"apps/*/node_modules/.cache\""
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.5",
+    "prettier": "^3.3.3",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.6.3"
+  }
+}

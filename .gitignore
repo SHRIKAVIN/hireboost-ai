@@ -1,0 +1,62 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# Build outputs
+dist/
+build/
+out/
+.next/
+.turbo/
+*.tsbuildinfo
+
+# Testing & coverage
+coverage/
+.nyc_output/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+.env.test
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json.example
+.idea/
+
+# Caches
+.cache/
+.eslintcache
+.stylelintcache
+.parcel-cache/
+
+# PWA generated
+apps/web/dev-dist/
+apps/web/public/sw.js
+apps/web/public/workbox-*.js
+apps/web/public/registerSW.js
+
+# Uploads (local dev)
+apps/api/uploads/
+apps/api/tmp/
+
+# Misc
+.vercel
+.netlify
+*.pem
