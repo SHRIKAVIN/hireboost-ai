@@ -13,8 +13,7 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "npm run dev --workspace @hireboost/web",
-    "dev:all": "npm-run-all --parallel dev:web dev:api",
+    "dev": "npm-run-all --parallel dev:web dev:api",
     "dev:web": "npm run dev --workspace @hireboost/web",
     "dev:api": "npm run dev --workspace @hireboost/api",
     "build": "npm-run-all build:shared build:api build:web",

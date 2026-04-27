@@ -6,8 +6,8 @@ Frontend workspace for HireBoost AI — Vite + React 18 + TypeScript + Tailwind 
 
 - **Phase 1**: scaffold ✅
 - **Phase 2**: foundation — routing, theme, marketing pages, auth pages, dashboard shell ✅
-- **Phase 3**: hooks into the real backend
-- **Phase 4**: real auth flow
+- **Phase 3**: backend foundation now live at `http://localhost:4000/api/v1` (the axios client points here; first real query is `/api/v1/health`)
+- **Phase 4**: real auth flow (JWT) replaces the dev bypass
 - **Phase 5+**: feature pages get fully wired (currently render a polished placeholder)
 
 ## Local dev

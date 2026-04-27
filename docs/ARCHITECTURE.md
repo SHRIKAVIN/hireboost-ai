@@ -50,7 +50,7 @@ Both apps extend `tsconfig.base.json` and inherit strict mode.
 
 ---
 
-## 3. Layered Backend (planned, Phase 3+)
+## 3. Layered Backend (Phase 3 ✅, growing through Phase 11)
 
 ```
 routes/         → URL → controller mapping (thin)
@@ -127,7 +127,7 @@ Failure policy: provider errors degrade gracefully — the deterministic ATS eng
 
 ---
 
-## 7. Security Posture (planned, Phase 3+)
+## 7. Security Posture (Phase 3 ✅, hardened through Phase 4+)
 
 - `helmet` with sane defaults.
 - `cors` with explicit allowlist from `CORS_ORIGINS` env.

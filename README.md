@@ -80,9 +80,7 @@ npm -v    # 10.x
 
 ---
 
-## Quick Start (Phase 1)
-
-After Phase 1, the monorepo is wired but the apps are minimal placeholders. They become real Vite/Express servers in Phases 2 and 3.
+## Quick Start
 
 ```bash
 # 1. Clone and enter
@@ -92,17 +90,25 @@ cd hireboost-ai
 # 2. Install all workspaces
 npm install
 
-# 3. Copy env files (root + per-app placeholders)
+# 3. Copy env files
 cp .env.example .env
+cp apps/api/.env.example apps/api/.env
+cp apps/web/.env.example apps/web/.env  # if it exists
 
-# 4. Type-check everything
+# 4. (Optional) start a local MongoDB
+#    e.g. docker run -d --name hireboost-mongo -p 27017:27017 mongo:7
+
+# 5. Run web + api in parallel
+npm run dev          # web on :5173, api on :4000
+
+# 6. Sanity checks
+curl http://localhost:4000/api/v1/health
+open  http://localhost:5173
+
+# Type-check / build everything (shared → api → web)
 npm run typecheck
-
-# 5. Build everything (shared → api → web)
 npm run build
 ```
-
-> Phase 1 does not yet start dev servers (no Vite/Express yet). Those come in Phases 2 and 3, where `npm run dev` will start both apps in parallel.
 
 ---
 
@@ -112,12 +118,13 @@ All commands run from the repo root.
 
 | Script              | What it does                                                |
 | ------------------- | ----------------------------------------------------------- |
-| `npm run dev`       | Run web + api in parallel (available from Phase 3 onward)   |
+| `npm run dev`       | Run web + api in parallel (web :5173, api :4000)            |
 | `npm run dev:web`   | Run only the frontend                                       |
-| `npm run dev:api`   | Run only the backend                                        |
+| `npm run dev:api`   | Run only the backend (`tsx watch`)                          |
 | `npm run build`     | Build shared → api → web in order                           |
+| `npm run start:api` | Run the compiled API from `apps/api/dist/server.js`         |
 | `npm run typecheck` | Strict TS type-check across all workspaces                  |
-| `npm run lint`      | Lint all workspaces (lint configs land in Phases 2 and 3)   |
+| `npm run lint`      | Lint all workspaces                                         |
 | `npm run format`    | Prettier-format the whole repo                              |
 | `npm run clean`     | Remove `dist/` outputs and per-package build caches         |
 
@@ -142,9 +149,9 @@ See `/.env.example` for the canonical list. Per-app `.env.example` files appear 
 | Phase | Scope                                           | Status      |
 | ----- | ----------------------------------------------- | ----------- |
 | 1     | Monorepo setup (workspaces, tsconfig, scripts)  | ✅ Done      |
-| 2     | Frontend foundation (Vite + Tailwind + shadcn)  | ⏳ Next      |
-| 3     | Backend foundation (Express + Mongo + logger)   | ⏳ Pending   |
-| 4     | Authentication (JWT, Google OAuth scaffold)     | ⏳ Pending   |
+| 2     | Frontend foundation (Vite + Tailwind + shadcn)  | ✅ Done      |
+| 3     | Backend foundation (Express + Mongo + logger)   | ✅ Done      |
+| 4     | Authentication (JWT, Google OAuth scaffold)     | ⏳ Next      |
 | 5     | Job Description Intake                          | ⏳ Pending   |
 | 6     | Resume Upload + Parsing                         | ⏳ Pending   |
 | 7     | ATS Analyzer engine                             | ⏳ Pending   |

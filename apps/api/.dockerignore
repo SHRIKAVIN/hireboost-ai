@@ -1,0 +1,14 @@
+**/node_modules
+**/dist
+**/*.log
+.git
+.gitignore
+.env
+.env.*
+*.local
+apps/web
+.vscode
+.idea
+.cursor
+docs
+README.md
