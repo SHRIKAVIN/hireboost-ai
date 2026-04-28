@@ -157,3 +157,32 @@ export const contactFormSchema = z.object({
   message: z.string().trim().min(10, 'Message is too short').max(5000, 'Message is too long'),
 });
 export type ContactFormInput = z.infer<typeof contactFormSchema>;
+
+/* ---------------------- Account / profile (Phase 11) ---- */
+
+const userPreferencesPatchSchema = z.object({
+  emailAnalysisReady: z.boolean().optional(),
+  emailProductTips: z.boolean().optional(),
+  inAppAnalysisReady: z.boolean().optional(),
+});
+
+const userProfilePatchSchema = z.object({
+  skills: z.array(z.string()).optional(),
+  experienceYears: z.coerce.number().int().min(0).max(80).optional(),
+  preferredRoles: z.array(z.string()).optional(),
+  preferredLocations: z.array(z.string()).optional(),
+  summary: z.string().max(8000).optional(),
+});
+
+/** Partial update for `PATCH /users/me`. */
+export const updateCurrentUserSchema = z.object({
+  name: z.string().trim().min(1).max(120).optional(),
+  profile: userProfilePatchSchema.optional(),
+  preferences: userPreferencesPatchSchema.optional(),
+});
+export type UpdateCurrentUserInput = z.infer<typeof updateCurrentUserSchema>;
+
+export const notificationListQuerySchema = z.object({
+  limit: z.coerce.number().int().min(1).max(50).default(20),
+});
+export type NotificationListQuery = z.infer<typeof notificationListQuerySchema>;

@@ -1,6 +1,19 @@
-import type { AuthSession, User } from '@hireboost/shared';
+import type { AuthSession, User, UserPreferences } from '@hireboost/shared';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+
+const defaultPreferences: UserPreferences = {
+  emailAnalysisReady: true,
+  emailProductTips: false,
+  inAppAnalysisReady: true,
+};
+
+function normalizeUser(user: User): User {
+  return {
+    ...user,
+    preferences: { ...defaultPreferences, ...user.preferences },
+  };
+}
 
 interface AuthState {
   user: User | null;
@@ -22,11 +35,12 @@ export const useAuthStore = create<AuthState>()(
       isHydrated: false,
       setSession: (session) =>
         set({
-          user: session.user,
+          user: normalizeUser(session.user),
           accessToken: session.accessToken,
           isAuthenticated: true,
         }),
-      setUser: (user) => set({ user, isAuthenticated: !!user }),
+      setUser: (user) =>
+        set({ user: user ? normalizeUser(user) : null, isAuthenticated: !!user }),
       clear: () => set({ user: null, accessToken: null, isAuthenticated: false }),
       setHydrated: () => set({ isHydrated: true }),
     }),

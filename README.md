@@ -158,8 +158,8 @@ See `/.env.example` for the canonical list. Per-app `.env.example` files appear 
 | 8     | AI Resume Enhancer (Gemini/OpenAI provider)     | ✅ Done      |
 | 9     | Resume Diff + Review                            | ✅ Done      |
 | 10    | Resume Editor + PDF export                      | ✅ Done      |
-| 11    | Notifications + Profile + Settings              | ⏳ Next      |
-| 12    | PWA + AWS deployment + final polish             | ⏳ Pending   |
+| 11    | Notifications + Profile + Settings              | ✅ Done      |
+| 12    | PWA + AWS deployment + final polish             | ⏳ Next      |
 
 See `docs/ARCHITECTURE.md` for the longer-form architectural notes.
 
