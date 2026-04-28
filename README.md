@@ -176,7 +176,7 @@ See `docs/ARCHITECTURE.md` for the longer-form architectural notes.
 - **Health check** → `GET /api/v1/health`.
 
 ---
-
+hi 
 ## License
 
 Proprietary — All rights reserved.
