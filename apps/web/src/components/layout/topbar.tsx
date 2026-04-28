@@ -1,5 +1,6 @@
-import { Bell, Menu, Search } from 'lucide-react';
+import { Menu, Search } from 'lucide-react';
 
+import { NotificationsMenu } from '@/components/shared/notifications-menu';
 import { ThemeToggle } from '@/components/shared/theme-toggle';
 import { UserMenu } from '@/components/shared/user-menu';
 import { Button } from '@/components/ui/button';
@@ -33,10 +34,7 @@ export function Topbar({ onOpenMobileMenu }: TopbarProps) {
       </div>
 
       <div className="ml-auto flex items-center gap-1.5">
-        <Button variant="ghost" size="icon" aria-label="Notifications" className="relative">
-          <Bell className="h-4 w-4" />
-          <span className="absolute right-2 top-2 inline-block h-2 w-2 rounded-full bg-primary ring-2 ring-background" />
-        </Button>
+        <NotificationsMenu />
         <ThemeToggle />
         <UserMenu />
       </div>

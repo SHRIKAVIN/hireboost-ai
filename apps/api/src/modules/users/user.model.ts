@@ -1,4 +1,9 @@
-import type { AuthProvider, User as UserPublic, UserProfile } from '@hireboost/shared';
+import type {
+  AuthProvider,
+  User as UserPublic,
+  UserPreferences,
+  UserProfile,
+} from '@hireboost/shared';
 import { UserRole } from '@hireboost/shared';
 import {
   Schema,
@@ -23,6 +28,7 @@ export interface UserDocumentFields {
   passwordHash?: string;
   emailVerified: boolean;
   profile: UserProfile;
+  preferences: UserPreferences;
   lastLoginAt?: Date;
   createdAt: Date;
   updatedAt: Date;
@@ -50,6 +56,15 @@ const userProfileSchema = new Schema<UserProfile>(
   { _id: false },
 );
 
+const userPreferencesSchema = new Schema<UserPreferences>(
+  {
+    emailAnalysisReady: { type: Boolean, default: true },
+    emailProductTips: { type: Boolean, default: false },
+    inAppAnalysisReady: { type: Boolean, default: true },
+  },
+  { _id: false },
+);
+
 const userSchema = new Schema<UserDocumentFields, UserModel, UserMethods>(
   {
     email: { type: String, required: true, trim: true },
@@ -72,6 +87,7 @@ const userSchema = new Schema<UserDocumentFields, UserModel, UserMethods>(
     passwordHash: { type: String },
     emailVerified: { type: Boolean, default: false },
     profile: { type: userProfileSchema, default: () => ({}) },
+    preferences: { type: userPreferencesSchema, default: () => ({}) },
     lastLoginAt: { type: Date },
   },
   {
@@ -113,6 +129,11 @@ userSchema.method('toPublic', function (this: UserDocument): UserPublic {
       preferredRoles: this.profile?.preferredRoles ?? [],
       preferredLocations: this.profile?.preferredLocations ?? [],
       summary: this.profile?.summary ?? '',
+    },
+    preferences: {
+      emailAnalysisReady: this.preferences?.emailAnalysisReady ?? true,
+      emailProductTips: this.preferences?.emailProductTips ?? false,
+      inAppAnalysisReady: this.preferences?.inAppAnalysisReady ?? true,
     },
     createdAt: this.createdAt.toISOString(),
     updatedAt: this.updatedAt.toISOString(),

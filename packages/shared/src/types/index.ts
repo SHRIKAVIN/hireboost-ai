@@ -48,6 +48,16 @@ export interface UserProfile {
   summary: string;
 }
 
+/** Product / notification preferences (Phase 11). Email flags are for future outbound mail. */
+export interface UserPreferences {
+  /** Notify when ATS or similar analysis finishes (in-app + optional email). */
+  emailAnalysisReady: boolean;
+  /** Product tips & feature announcements (email). */
+  emailProductTips: boolean;
+  /** Show in-app notification when analysis completes. */
+  inAppAnalysisReady: boolean;
+}
+
 export type AuthProvider = 'local' | 'google';
 
 export interface User {
@@ -59,6 +69,7 @@ export interface User {
   provider: AuthProvider;
   emailVerified: boolean;
   profile: UserProfile;
+  preferences: UserPreferences;
   createdAt: string;
   updatedAt: string;
 }
@@ -217,4 +228,8 @@ export interface AppNotification {
   read: boolean;
   metadata?: Record<string, unknown>;
   createdAt: string;
+}
+
+export interface NotificationListResponse {
+  items: AppNotification[];
 }

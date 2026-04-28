@@ -14,6 +14,7 @@ export function useAtsAnalyze() {
       queryClient.setQueryData(JOB_INTAKE_KEYS.detail(analysis.id), analysis);
       queryClient.invalidateQueries({ queryKey: JOB_INTAKE_KEYS.all });
       queryClient.invalidateQueries({ queryKey: ['resumes'] });
+      void queryClient.invalidateQueries({ queryKey: ['notifications'] });
     },
   });
 }

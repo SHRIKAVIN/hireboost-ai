@@ -1,6 +1,9 @@
 import type { JobAnalysis } from '@hireboost/shared';
+import { NotificationType } from '@hireboost/shared';
 
 import { ApiError } from '../../utils/api-error.js';
+import { createNotificationForUser } from '../notifications/notification.service.js';
+import { findUserById } from '../users/user.service.js';
 import {
   findJobAnalysisById,
   updateJobAnalysisAts,
@@ -59,5 +62,18 @@ export async function analyzeAtsForUser(input: {
     { $set: { latestATSScore: result.atsScore } },
   );
 
-  return updated.toPublic();
+  const analysis = updated.toPublic();
+
+  const owner = await findUserById(input.userId);
+  if (owner?.preferences?.inAppAnalysisReady !== false) {
+    void createNotificationForUser({
+      userId: input.userId,
+      type: NotificationType.AnalysisCompleted,
+      title: 'ATS analysis ready',
+      message: `Match score ${result.matchPercent}% for "${analysis.extractedRole}".`,
+      metadata: { jobAnalysisId: input.jobAnalysisId },
+    }).catch(() => {});
+  }
+
+  return analysis;
 }

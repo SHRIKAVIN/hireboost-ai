@@ -1,4 +1,4 @@
-import type { AuthProvider } from '@hireboost/shared';
+import type { AuthProvider, UpdateCurrentUserInput } from '@hireboost/shared';
 import type { Types } from 'mongoose';
 
 import { UserModelRef, type UserDocument } from './user.model.js';
@@ -64,4 +64,43 @@ export async function upsertGoogleUser(input: {
 
 export async function touchLastLogin(userId: string | Types.ObjectId): Promise<void> {
   await UserModelRef.updateOne({ _id: userId }, { $set: { lastLoginAt: new Date() } });
+}
+
+export async function updateUserById(
+  userId: string,
+  patch: UpdateCurrentUserInput,
+): Promise<UserDocument | null> {
+  const user = await findUserById(userId);
+  if (!user) return null;
+
+  if (user.get('preferences') == null) {
+    user.set('preferences', {
+      emailAnalysisReady: true,
+      emailProductTips: false,
+      inAppAnalysisReady: true,
+    });
+  }
+
+  if (patch.name !== undefined) {
+    user.name = patch.name;
+  }
+
+  if (patch.profile) {
+    const p = patch.profile;
+    if (p.skills !== undefined) user.profile.skills = p.skills;
+    if (p.experienceYears !== undefined) user.profile.experienceYears = p.experienceYears;
+    if (p.preferredRoles !== undefined) user.profile.preferredRoles = p.preferredRoles;
+    if (p.preferredLocations !== undefined) user.profile.preferredLocations = p.preferredLocations;
+    if (p.summary !== undefined) user.profile.summary = p.summary;
+  }
+
+  if (patch.preferences) {
+    const pr = patch.preferences;
+    if (pr.emailAnalysisReady !== undefined) user.preferences.emailAnalysisReady = pr.emailAnalysisReady;
+    if (pr.emailProductTips !== undefined) user.preferences.emailProductTips = pr.emailProductTips;
+    if (pr.inAppAnalysisReady !== undefined) user.preferences.inAppAnalysisReady = pr.inAppAnalysisReady;
+  }
+
+  await user.save();
+  return user;
 }
