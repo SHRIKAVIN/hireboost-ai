@@ -70,6 +70,17 @@ export const resumeListQuerySchema = z.object({
 });
 export type ResumeListQuery = z.infer<typeof resumeListQuerySchema>;
 
+const objectIdString = z.string().regex(/^[a-fA-F0-9]{24}$/, 'Invalid id');
+
+/* ---------------------- ATS (Phase 7) -------------------- */
+
+export const atsAnalyzeSchema = z.object({
+  jobAnalysisId: objectIdString,
+  /** When omitted, the resume linked on the job analysis (`resumeId`) is used. */
+  resumeId: objectIdString.optional(),
+});
+export type AtsAnalyzeInput = z.infer<typeof atsAnalyzeSchema>;
+
 /* ---------------------- Contact form ---------------------- */
 
 export const contactFormSchema = z.object({

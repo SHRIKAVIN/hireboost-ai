@@ -27,6 +27,14 @@ export interface JobAnalysisFields {
   responsibilities: string[];
   preferredQualifications: string[];
   toolsAndTechnologies: string[];
+  /** Filled by Phase 7 ATS engine after `POST /ats/analyze`. */
+  atsScore?: number;
+  matchPercent?: number;
+  missingKeywords?: string[];
+  weakBullets?: string[];
+  formattingSuggestions?: string[];
+  aiSuggestions?: string[];
+  skillGaps?: string[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -72,6 +80,13 @@ const jobAnalysisSchema = new Schema<JobAnalysisFields, JobAnalysisModel, JobAna
     responsibilities: { type: [String], default: [] },
     preferredQualifications: { type: [String], default: [] },
     toolsAndTechnologies: { type: [String], default: [] },
+    atsScore: { type: Number, min: 0, max: 100 },
+    matchPercent: { type: Number, min: 0, max: 100 },
+    missingKeywords: { type: [String], default: [] },
+    weakBullets: { type: [String], default: [] },
+    formattingSuggestions: { type: [String], default: [] },
+    aiSuggestions: { type: [String], default: [] },
+    skillGaps: { type: [String], default: [] },
   },
   {
     timestamps: true,
@@ -99,6 +114,17 @@ jobAnalysisSchema.method('toPublic', function (this: JobAnalysisDocument): JobAn
     responsibilities: [...this.responsibilities],
     preferredQualifications: [...this.preferredQualifications],
     toolsAndTechnologies: [...this.toolsAndTechnologies],
+    ...(this.atsScore !== undefined
+      ? {
+          atsScore: this.atsScore,
+          matchPercent: this.matchPercent ?? 0,
+          missingKeywords: [...(this.missingKeywords ?? [])],
+          weakBullets: [...(this.weakBullets ?? [])],
+          formattingSuggestions: [...(this.formattingSuggestions ?? [])],
+          aiSuggestions: [...(this.aiSuggestions ?? [])],
+          skillGaps: [...(this.skillGaps ?? [])],
+        }
+      : {}),
     createdAt: this.createdAt.toISOString(),
   };
 });

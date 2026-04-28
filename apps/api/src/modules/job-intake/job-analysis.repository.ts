@@ -61,6 +61,25 @@ export async function setJobAnalysisResumeId(
   return res.matchedCount === 1;
 }
 
+export interface JobAnalysisAtsPatch {
+  atsScore: number;
+  matchPercent: number;
+  missingKeywords: string[];
+  weakBullets: string[];
+  formattingSuggestions: string[];
+  aiSuggestions: string[];
+  skillGaps: string[];
+}
+
+export async function updateJobAnalysisAts(
+  userId: string | Types.ObjectId,
+  id: string,
+  patch: JobAnalysisAtsPatch,
+): Promise<JobAnalysisDocument | null> {
+  if (!isObjectId(id)) return null;
+  return JobAnalysisModelRef.findOneAndUpdate({ _id: id, userId }, { $set: patch }, { new: true });
+}
+
 function isObjectId(value: string): boolean {
   return /^[a-fA-F0-9]{24}$/.test(value);
 }
