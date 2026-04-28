@@ -1,5 +1,5 @@
 import * as mammoth from 'mammoth';
-import { PDFParse } from 'pdf-parse';
+import pdfParse from 'pdf-parse';
 
 import { ApiError } from '../../utils/api-error.js';
 
@@ -44,24 +44,16 @@ export async function extractText(
 }
 
 async function extractFromPdf(buffer: Buffer): Promise<ExtractedText> {
-  const parser = new PDFParse({ data: new Uint8Array(buffer) });
   try {
-    // Disable the default page-joiner ("-- 1 of 2 --") which would otherwise
-    // contaminate the body text and confuse downstream section parsing.
-    const result = await parser.getText({ pageJoiner: '\n' });
+    const result = await pdfParse(buffer);
     return {
       text: normalize(result.text),
-      pageCount: result.total,
+      pageCount: result.numpages,
     };
   } catch (err) {
     throw ApiError.badRequest(
       `Could not read PDF: ${err instanceof Error ? err.message : 'unknown error'}`,
     );
-  } finally {
-    // Important — pdfjs spawns workers internally; this releases them.
-    await parser.destroy().catch(() => {
-      /* swallow */
-    });
   }
 }
 
