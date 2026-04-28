@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
 import { PageLoader } from '@/components/shared/page-loader';
-import { authApi } from '@/features/auth/api/auth-api';
+import { trySilentRefreshSession } from '@/features/auth/api/auth-api';
 import { needsSilentRefresh } from '@/lib/access-token';
 import { ROUTES } from '@/routes/paths';
 import { useAuthStore } from '@/store/auth-store';
@@ -27,10 +27,9 @@ export function ProtectedRoute() {
 
     (async () => {
       try {
-        const session = await authApi.refresh();
-        setSession(session);
-      } catch {
-        clear();
+        const session = await trySilentRefreshSession();
+        if (session) setSession(session);
+        else clear();
       } finally {
         setBootstrapping(false);
       }

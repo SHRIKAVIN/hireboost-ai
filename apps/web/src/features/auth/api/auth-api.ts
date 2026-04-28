@@ -9,6 +9,22 @@ import type {
 import { apiClient } from '@/lib/api-client';
 import { env } from '@/lib/env';
 
+/** Single-flight refresh so marketing shell + protected route never duplicate POST /auth/refresh. */
+let refreshInflight: Promise<AuthSession | null> | null = null;
+
+export function trySilentRefreshSession(): Promise<AuthSession | null> {
+  if (!refreshInflight) {
+    refreshInflight = authApi
+      .refresh()
+      .then((s) => s)
+      .catch((): null => null)
+      .finally(() => {
+        refreshInflight = null;
+      });
+  }
+  return refreshInflight;
+}
+
 export const authApi = {
   async login(input: LoginInput): Promise<AuthSession> {
     const { data } = await apiClient.post<ApiResponse<AuthSession>>('/auth/login', input);
