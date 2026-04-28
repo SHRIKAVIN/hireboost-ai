@@ -41,5 +41,6 @@ export const authApi = {
 
 /** Absolute URL to start the Google OAuth flow (server-driven redirect). */
 export function googleOAuthStartUrl(): string {
-  return `${env.VITE_API_BASE_URL}/auth/google`;
+  const { origin } = new URL(env.VITE_API_BASE_URL);
+  return `${origin}/api/v1/auth/google`;
 }
