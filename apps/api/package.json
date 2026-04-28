@@ -7,9 +7,9 @@
   "main": "./dist/server.js",
   "scripts": {
     "dev": "tsx watch --clear-screen=false src/server.ts",
-    "build": "node ../../node_modules/typescript/bin/tsc -p tsconfig.json",
+    "build": "npx --yes --package=typescript@5.9.3 tsc -p tsconfig.json",
     "start": "node dist/server.js",
-    "typecheck": "node ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
+    "typecheck": "npx --yes --package=typescript@5.9.3 tsc -p tsconfig.json --noEmit",
     "lint": "eslint \"src/**/*.ts\" --max-warnings=0"
   },
   "dependencies": {

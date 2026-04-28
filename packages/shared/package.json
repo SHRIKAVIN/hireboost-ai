@@ -23,9 +23,9 @@
     "src"
   ],
   "scripts": {
-    "build": "node ../../node_modules/typescript/bin/tsc -p tsconfig.json",
-    "dev": "node ../../node_modules/typescript/bin/tsc -p tsconfig.json --watch",
-    "typecheck": "node ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
+    "build": "npx --yes --package=typescript@5.9.3 tsc -p tsconfig.json",
+    "dev": "npx --yes --package=typescript@5.9.3 tsc -p tsconfig.json --watch",
+    "typecheck": "npx --yes --package=typescript@5.9.3 tsc -p tsconfig.json --noEmit",
     "clean": "rimraf dist"
   },
   "dependencies": {
