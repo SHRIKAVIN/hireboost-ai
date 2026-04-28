@@ -60,8 +60,11 @@ export function AtsReviewPage() {
         </h1>
         <p className="max-w-2xl text-sm text-muted-foreground">
           Deterministic keyword and structure scoring against the job you analyzed — missing
-          terms, weak bullets, and layout flags. No AI keys required; Phase 8 can add smarter
-          rewrites on top.
+          terms, weak bullets, and layout flags. Then use{' '}
+          <Link className="font-medium text-primary underline" to={ROUTES.app.aiEnhance}>
+            AI Enhance
+          </Link>{' '}
+          for LLM-powered rewrites aligned to this JD.
         </p>
       </div>
 
@@ -164,6 +167,18 @@ export function AtsReviewPage() {
           )}
 
           <AtsResultsPanel analysis={analysis} />
+
+          {canRun && (
+            <div className="flex flex-col gap-3 rounded-xl border border-primary/25 bg-gradient-to-br from-primary/[0.07] to-transparent px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-sm text-foreground/90">
+                Ready for deeper edits? Generate an AI-tailored resume using this job context and
+                ATS gaps.
+              </p>
+              <Button asChild variant="primary">
+                <Link to={ROUTES.app.aiEnhance}>Go to AI Enhance</Link>
+              </Button>
+            </div>
+          )}
         </>
       )}
     </div>

@@ -46,8 +46,8 @@ export class ApiError extends Error {
   static unprocessable(message = 'Unprocessable entity', details?: unknown) {
     return new ApiError({ statusCode: 422, code: 'UNPROCESSABLE_ENTITY', message, details });
   }
-  static tooManyRequests(message = 'Too many requests') {
-    return new ApiError({ statusCode: 429, code: 'RATE_LIMITED', message });
+  static tooManyRequests(message = 'Too many requests', details?: unknown) {
+    return new ApiError({ statusCode: 429, code: 'RATE_LIMITED', message, details });
   }
   static internal(message = 'Internal server error', details?: unknown) {
     return new ApiError({

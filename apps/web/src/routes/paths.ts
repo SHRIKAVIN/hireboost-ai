@@ -19,6 +19,7 @@ export const ROUTES = {
     jobIntake: '/app/job-description',
     resumeUpload: '/app/resume-upload',
     atsReview: '/app/ats-review',
+    aiEnhance: '/app/ai-enhance',
     resumeDiff: '/app/resume-diff',
     resumeEditor: '/app/resume-editor',
     profile: '/app/profile',

@@ -155,8 +155,8 @@ See `/.env.example` for the canonical list. Per-app `.env.example` files appear 
 | 5     | Job Description Intake                          | ✅ Done      |
 | 6     | Resume Upload + Parsing                         | ✅ Done      |
 | 7     | ATS Analyzer engine                             | ✅ Done      |
-| 8     | AI Resume Enhancer (Gemini/OpenAI provider)     | ⏳ Next      |
-| 9     | Resume Diff + Review                            | ⏳ Pending   |
+| 8     | AI Resume Enhancer (Gemini/OpenAI provider)     | ✅ Done      |
+| 9     | Resume Diff + Review                            | ⏳ Next      |
 | 10    | Resume Editor + PDF export                      | ⏳ Pending   |
 | 11    | Notifications + Profile + Settings              | ⏳ Pending   |
 | 12    | PWA + AWS deployment + final polish             | ⏳ Pending   |

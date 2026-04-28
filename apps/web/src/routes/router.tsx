@@ -27,6 +27,7 @@ const DashboardPage = lazy(() => import('@/features/dashboard/pages/dashboard'))
 const JobIntakePage = lazy(() => import('@/features/job-intake/pages/job-intake'));
 const ResumeUploadPage = lazy(() => import('@/features/resume-upload/pages/resume-upload'));
 const AtsReviewPage = lazy(() => import('@/features/ats-review/pages/ats-review'));
+const ResumeEnhancePage = lazy(() => import('@/features/resume-enhance/pages/resume-enhance'));
 const ResumeDiffPage = lazy(() => import('@/features/resume-diff/pages/resume-diff'));
 const ResumeEditorPage = lazy(() => import('@/features/resume-editor/pages/resume-editor'));
 const ProfilePage = lazy(() => import('@/features/profile/pages/profile'));
@@ -72,6 +73,7 @@ export const router = createBrowserRouter([
           { path: ROUTES.app.jobIntake, element: withSuspense(<JobIntakePage />) },
           { path: ROUTES.app.resumeUpload, element: withSuspense(<ResumeUploadPage />) },
           { path: ROUTES.app.atsReview, element: withSuspense(<AtsReviewPage />) },
+          { path: ROUTES.app.aiEnhance, element: withSuspense(<ResumeEnhancePage />) },
           { path: ROUTES.app.resumeDiff, element: withSuspense(<ResumeDiffPage />) },
           { path: ROUTES.app.resumeEditor, element: withSuspense(<ResumeEditorPage />) },
           { path: ROUTES.app.profile, element: withSuspense(<ProfilePage />) },

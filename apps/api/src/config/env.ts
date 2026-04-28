@@ -1,7 +1,16 @@
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import { config as loadDotenv } from 'dotenv';
 import { z } from 'zod';
 
-loadDotenv();
+const apiRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
+const repoRoot = resolve(apiRoot, '../..');
+
+// Do not rely on process.cwd(): dev may run from repo root while secrets live in apps/api/.env.
+// Load optional root .env first, then apps/api/.env overrides (e.g. GEMINI_MODEL).
+loadDotenv({ path: resolve(repoRoot, '.env') });
+loadDotenv({ path: resolve(apiRoot, '.env'), override: true });
 
 const booleanish = z
   .union([z.string(), z.boolean()])
@@ -46,7 +55,8 @@ const envSchema = z.object({
 
   AI_PROVIDER: z.enum(['gemini', 'openai']).default('gemini'),
   GEMINI_API_KEY: z.string().optional(),
-  GEMINI_MODEL: z.string().default('gemini-1.5-flash'),
+  /** Gemini model id (e.g. `gemini-flash-latest` — tracks latest Flash; override in .env). */
+  GEMINI_MODEL: z.string().default('gemini-flash-latest'),
   OPENAI_API_KEY: z.string().optional(),
   OPENAI_MODEL: z.string().default('gpt-4o-mini'),
 

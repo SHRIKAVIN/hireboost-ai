@@ -81,6 +81,73 @@ export const atsAnalyzeSchema = z.object({
 });
 export type AtsAnalyzeInput = z.infer<typeof atsAnalyzeSchema>;
 
+/** Same shape as ATS analyze — job + optional explicit resume id. */
+export const resumeEnhanceRequestSchema = atsAnalyzeSchema;
+export type ResumeEnhanceInput = z.infer<typeof resumeEnhanceRequestSchema>;
+
+/* ---------------------- Resume JSON (AI parse) ------------ */
+
+const resumeLinkSchema = z.object({
+  label: z.string(),
+  url: z.string(),
+});
+
+const resumeBasicsSchema = z.object({
+  fullName: z.string(),
+  email: z.string(),
+  phone: z.string().optional(),
+  location: z.string().optional(),
+  links: z.array(resumeLinkSchema).optional(),
+});
+
+const resumeExperienceSchema = z.object({
+  company: z.string(),
+  role: z.string(),
+  location: z.string().optional(),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
+  current: z.boolean().optional(),
+  bullets: z.array(z.string()).default([]),
+});
+
+const resumeEducationSchema = z.object({
+  institution: z.string(),
+  degree: z.string().optional(),
+  field: z.string().optional(),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
+  details: z.string().optional(),
+});
+
+const resumeProjectSchema = z.object({
+  name: z.string(),
+  description: z.string().optional(),
+  url: z.string().optional(),
+  bullets: z.array(z.string()).default([]),
+});
+
+const resumeCertificationSchema = z.object({
+  name: z.string(),
+  issuer: z.string().optional(),
+  issueDate: z.string().optional(),
+  url: z.string().optional(),
+});
+
+export const resumeStructuredDataSchema = z.object({
+  basics: resumeBasicsSchema,
+  summary: z.string(),
+  skills: z.array(z.string()).default([]),
+  experience: z.array(resumeExperienceSchema).default([]),
+  education: z.array(resumeEducationSchema).default([]),
+  projects: z.array(resumeProjectSchema).default([]),
+  certifications: z.array(resumeCertificationSchema).default([]),
+});
+
+export const resumeEnhancementResponseSchema = z.object({
+  enhancedStructuredData: resumeStructuredDataSchema,
+  highlights: z.array(z.string()).max(25).default([]),
+});
+
 /* ---------------------- Contact form ---------------------- */
 
 export const contactFormSchema = z.object({
