@@ -40,7 +40,9 @@ export const useAuthStore = create<AuthState>()(
           isAuthenticated: true,
         }),
       setUser: (user) =>
-        set({ user: user ? normalizeUser(user) : null, isAuthenticated: !!user }),
+        user
+          ? set({ user: normalizeUser(user), isAuthenticated: true })
+          : set({ user: null, accessToken: null, isAuthenticated: false }),
       clear: () => set({ user: null, accessToken: null, isAuthenticated: false }),
       setHydrated: () => set({ isHydrated: true }),
     }),
@@ -51,8 +53,19 @@ export const useAuthStore = create<AuthState>()(
         accessToken: state.accessToken,
         isAuthenticated: state.isAuthenticated,
       }),
-      onRehydrateStorage: () => (state) => {
-        state?.setHydrated();
+      // Rehydration can finish synchronously before `useAuthStore` is assigned — never call
+      // `useAuthStore` here on the success path; use the `state` argument from persist instead.
+      onRehydrateStorage: () => (state, error) => {
+        if (error) {
+          console.warn('[auth] Persist rehydration failed', error);
+        }
+        if (state) {
+          state.setHydrated();
+        } else {
+          queueMicrotask(() => {
+            useAuthStore.getState().setHydrated();
+          });
+        }
       },
     },
   ),

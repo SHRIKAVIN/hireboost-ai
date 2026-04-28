@@ -3,13 +3,14 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
 import { PageLoader } from '@/components/shared/page-loader';
 import { authApi } from '@/features/auth/api/auth-api';
+import { needsSilentRefresh } from '@/lib/access-token';
 import { ROUTES } from '@/routes/paths';
 import { useAuthStore } from '@/store/auth-store';
 
 /**
- * Guards every authenticated route. On mount it tries to silently refresh
- * the session via the HttpOnly refresh-token cookie if there's no in-memory
- * access token, so a hard reload doesn't bounce the user to /login.
+ * Guards every authenticated route. After storage rehydrates, we renew the access token
+ * via the HttpOnly refresh cookie when it is missing or expired so returning users are not
+ * bounced to /login on every visit.
  */
 export function ProtectedRoute() {
   const { isAuthenticated, accessToken, isHydrated, setSession, clear } = useAuthStore();
@@ -19,7 +20,8 @@ export function ProtectedRoute() {
 
   useEffect(() => {
     if (!isHydrated) return;
-    if (accessToken || triedRef.current) return;
+    if (triedRef.current) return;
+    if (!needsSilentRefresh(accessToken)) return;
     triedRef.current = true;
     setBootstrapping(true);
 
