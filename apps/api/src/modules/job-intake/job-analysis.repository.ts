@@ -44,6 +44,23 @@ export async function deleteJobAnalysis(
   return res.deletedCount === 1;
 }
 
+/**
+ * Attach a resume to a job analysis (user-scoped). Called after a successful
+ * resume ingest when the client supplied `jobAnalysisId` on upload.
+ */
+export async function setJobAnalysisResumeId(
+  userId: string | Types.ObjectId,
+  jobAnalysisId: string,
+  resumeId: string | Types.ObjectId,
+): Promise<boolean> {
+  if (!isObjectId(jobAnalysisId) || !isObjectId(String(resumeId))) return false;
+  const res = await JobAnalysisModelRef.updateOne(
+    { _id: jobAnalysisId, userId },
+    { $set: { resumeId } },
+  );
+  return res.matchedCount === 1;
+}
+
 function isObjectId(value: string): boolean {
   return /^[a-fA-F0-9]{24}$/.test(value);
 }

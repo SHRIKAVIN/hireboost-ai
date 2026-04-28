@@ -122,11 +122,28 @@ export interface Resume {
   userId: string;
   originalFileName: string;
   fileUrl?: string;
-  storagePath?: string;
+  /** Present when this resume was uploaded in the context of a JD analysis. */
+  jobAnalysisId?: string;
   mimeType: string;
+  fileSize: number;
   rawText: string;
   parsedData: ResumeStructuredData;
   latestATSScore?: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** Lightweight projection used by the "your resumes" list. */
+export interface ResumeListItem {
+  id: string;
+  originalFileName: string;
+  mimeType: string;
+  fileSize: number;
+  fullName: string;
+  email: string;
+  topSkills: string[];
+  experienceCount: number;
+  educationCount: number;
   createdAt: string;
   updatedAt: string;
 }
