@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 
 import { cn } from '@/lib/cn';
 import { ROUTES } from '@/routes/paths';
+import { useAuthStore } from '@/store/auth-store';
 
 interface LogoProps {
   className?: string;
@@ -16,10 +17,13 @@ const sizeMap = {
   lg: { box: 'h-11 w-11', text: 'text-xl' },
 } as const;
 
-export function Logo({ className, to = ROUTES.marketing.home, showWordmark = true, size = 'md' }: LogoProps) {
+export function Logo({ className, to, showWordmark = true, size = 'md' }: LogoProps) {
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const resolvedTo =
+    to ?? (isAuthenticated ? ROUTES.app.dashboard : ROUTES.marketing.home);
   const s = sizeMap[size];
   return (
-    <Link to={to} className={cn('group inline-flex items-center gap-2.5', className)}>
+    <Link to={resolvedTo} className={cn('group inline-flex items-center gap-2.5', className)}>
       <span
         className={cn(
           'relative flex shrink-0 overflow-hidden rounded-full bg-muted/45 ring-1 ring-border/55 shadow-soft',
