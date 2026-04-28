@@ -34,3 +34,18 @@ export const authRateLimiter = rateLimit({
     },
   },
 });
+
+/** Stricter limiter for AI endpoints (Phase 8). */
+export const aiRateLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 30,
+  standardHeaders: 'draft-7',
+  legacyHeaders: false,
+  message: {
+    success: false,
+    error: {
+      code: 'RATE_LIMITED',
+      message: 'Too many AI requests this hour. Please try again later.',
+    },
+  },
+});

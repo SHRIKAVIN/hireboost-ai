@@ -1,4 +1,4 @@
-import { ArrowRight, FileSearch, GitCompare, Sparkles, Upload } from 'lucide-react';
+import { ArrowRight, FileSearch, GitCompare, Sparkles, Upload, Wand2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 import { Card, CardContent } from '@/components/ui/card';
@@ -27,6 +27,13 @@ const actions = [
     accent: 'from-emerald-500/15 to-teal-500/10',
   },
   {
+    icon: Wand2,
+    title: 'AI-enhance resume',
+    body: 'Gemini or OpenAI — tailored to your JD and ATS gaps.',
+    to: ROUTES.app.aiEnhance,
+    accent: 'from-violet-500/15 to-purple-500/10',
+  },
+  {
     icon: GitCompare,
     title: 'Open the diff view',
     body: 'See exactly what AI changed before you accept.',
@@ -37,7 +44,7 @@ const actions = [
 
 export function QuickActions() {
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
       {actions.map((a) => {
         const Icon = a.icon;
         return (

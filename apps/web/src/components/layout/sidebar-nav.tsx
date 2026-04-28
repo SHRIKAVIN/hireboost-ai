@@ -7,6 +7,7 @@ import {
   Sparkles,
   Upload,
   UserRound,
+  Wand2,
   type LucideIcon,
 } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
@@ -25,6 +26,7 @@ const workflowNav: NavItemDef[] = [
   { to: ROUTES.app.jobIntake, label: 'Job Description', icon: Sparkles },
   { to: ROUTES.app.resumeUpload, label: 'Upload Resume', icon: Upload },
   { to: ROUTES.app.atsReview, label: 'ATS Review', icon: FileSearch },
+  { to: ROUTES.app.aiEnhance, label: 'AI Enhance', icon: Wand2 },
   { to: ROUTES.app.resumeDiff, label: 'Resume Diff', icon: GitCompare },
   { to: ROUTES.app.resumeEditor, label: 'Editor', icon: PencilRuler },
 ];

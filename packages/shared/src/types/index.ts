@@ -1,4 +1,10 @@
-import type { NotificationType, ResumeSourceType, SeniorityLevel, UserRole } from '../enums/index.js';
+import type {
+  AiProvider,
+  NotificationType,
+  ResumeSourceType,
+  SeniorityLevel,
+  UserRole,
+} from '../enums/index.js';
 
 /* -------------------------------------------------------------------------- */
 /*                              API envelope types                            */
@@ -115,6 +121,14 @@ export interface ResumeStructuredData {
   education: ResumeEducation[];
   projects: ResumeProject[];
   certifications: ResumeCertification[];
+}
+
+/** Response from `POST /ai/enhance-resume` (Phase 8). */
+export interface ResumeEnhancementResult {
+  enhancedStructuredData: ResumeStructuredData;
+  highlights: string[];
+  provider: AiProvider;
+  model: string;
 }
 
 export interface Resume {
