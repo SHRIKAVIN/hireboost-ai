@@ -1,5 +1,6 @@
 import { Router } from 'express';
 
+import { env } from '../config/env.js';
 import authRoutes from '../modules/auth/auth.routes.js';
 import healthRoutes from '../modules/health/health.routes.js';
 import aiRoutes from '../modules/ai/ai.routes.js';
@@ -8,6 +9,7 @@ import jobIntakeRoutes from '../modules/job-intake/job-intake.routes.js';
 import notificationRoutes from '../modules/notifications/notification.routes.js';
 import resumeRoutes from '../modules/resumes/resume.routes.js';
 import userRoutes from '../modules/users/user.routes.js';
+import { ok } from '../utils/api-response.js';
 
 /**
  * Versioned API root. Every feature module mounts under here.
@@ -23,6 +25,15 @@ import userRoutes from '../modules/users/user.routes.js';
  */
 export function buildApiRouter(): Router {
   const router = Router();
+
+  router.get('/', (_req, res) => {
+    return ok(res, {
+      service: '@hireboost/api',
+      message: 'HireBoost AI API',
+      apiPrefix: env.API_PREFIX,
+      health: `${env.API_PREFIX}/health`,
+    });
+  });
 
   router.use('/health', healthRoutes);
   router.use('/auth', authRoutes);
