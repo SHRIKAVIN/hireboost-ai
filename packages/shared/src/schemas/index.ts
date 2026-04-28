@@ -58,6 +58,18 @@ export const jobAnalysisListQuerySchema = z.object({
 });
 export type JobAnalysisListQuery = z.infer<typeof jobAnalysisListQuerySchema>;
 
+/* ---------------------- Resumes -------------------------- */
+
+/**
+ * Query params for listing the current user's resumes.
+ * Mirrors `jobAnalysisListQuerySchema` so the UI can use the same
+ * "recent items sidebar" pattern across features.
+ */
+export const resumeListQuerySchema = z.object({
+  limit: z.coerce.number().int().min(1).max(50).default(10),
+});
+export type ResumeListQuery = z.infer<typeof resumeListQuerySchema>;
+
 /* ---------------------- Contact form ---------------------- */
 
 export const contactFormSchema = z.object({
