@@ -4,6 +4,9 @@ This guide deploys the monorepo **as designed in the README**: static **PWA** on
 
 ---
 
+
+nothings just setting up EC2
+
 ## 1. What you are building
 
 ```mermaid
