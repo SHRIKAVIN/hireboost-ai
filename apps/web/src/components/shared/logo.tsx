@@ -21,18 +21,20 @@ export function Logo({ className, to = ROUTES.marketing.home, showWordmark = tru
   return (
     <Link to={to} className={cn('group inline-flex items-center gap-2.5', className)}>
       <span
-        aria-hidden
         className={cn(
-          'relative flex shrink-0 items-center justify-center overflow-hidden rounded-lg',
-          'bg-gradient-to-br from-indigo-500 via-violet-500 to-fuchsia-500 text-white',
-          'shadow-glow transition-transform duration-300 group-hover:scale-[1.04]',
+          'relative flex shrink-0 overflow-hidden rounded-full bg-muted/45 ring-1 ring-border/55 shadow-soft',
+          'transition-transform duration-300 group-hover:scale-[1.04]',
           s.box,
         )}
       >
-        <svg viewBox="0 0 32 32" className="h-3/5 w-3/5 fill-white">
-          <path d="M9 22V10h2.6v4.7h5.3V10H19.5v12h-2.6v-5H11.6v5z" />
-          <circle cx="24" cy="10" r="2" className="fill-yellow-300" />
-        </svg>
+        <img
+          src="/app-logo.png"
+          alt=""
+          className="h-full w-full object-contain p-px"
+          width={44}
+          height={44}
+          decoding="async"
+        />
       </span>
       {showWordmark && (
         <span

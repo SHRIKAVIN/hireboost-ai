@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Settings as SettingsIcon } from 'lucide-react';
+import { Download, Settings as SettingsIcon, Share } from 'lucide-react';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { usePatchMeMutation } from '@/features/account/hooks/use-patch-me';
+import { usePwaInstall } from '@/hooks/use-pwa-install';
 import { formatApiError } from '@/lib/api-client';
 import { useAuthStore } from '@/store/auth-store';
 
@@ -23,6 +24,7 @@ type PrefsForm = z.infer<typeof prefsSchema>;
 export function SettingsPage() {
   const user = useAuthStore((s) => s.user);
   const patchMe = usePatchMeMutation();
+  const { canPrompt, promptInstall, isStandalone } = usePwaInstall();
 
   const form = useForm<PrefsForm>({
     resolver: zodResolver(prefsSchema),
@@ -63,6 +65,60 @@ export function SettingsPage() {
           Control notifications. Theme follows your device — use the toggle in the header.
         </p>
       </div>
+
+      <Card>
+        <CardContent className="p-6 space-y-4">
+          <div className="flex items-start gap-3">
+            <img
+              src="/app-logo.png"
+              alt=""
+              width={48}
+              height={48}
+              className="h-12 w-12 shrink-0 rounded-full bg-muted/50 object-contain ring-1 ring-border/60"
+              decoding="async"
+            />
+            <div className="min-w-0 space-y-2">
+              <h2 className="text-sm font-semibold">Install HireBoost AI</h2>
+              {isStandalone ? (
+                <p className="text-sm text-muted-foreground">You&apos;re already using the installed app.</p>
+              ) : (
+                <>
+                  <p className="text-sm text-muted-foreground">
+                    Chrome and Edge can install this site as an app. There is usually{' '}
+                    <strong>no automatic popup</strong> — use the banner on this site or the install icon in the
+                    address bar when it appears.
+                  </p>
+                  {canPrompt ? (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="gap-2"
+                      onClick={() => void promptInstall()}
+                    >
+                      <Download className="h-4 w-4" />
+                      Install now
+                    </Button>
+                  ) : (
+                    <p className="text-xs text-muted-foreground">
+                      If you don&apos;t see an install option, use a production build (
+                      <code className="rounded bg-muted px-1 py-0.5 text-[11px]">npm run preview</code>) on{' '}
+                      <strong>localhost</strong> or <strong>HTTPS</strong>, then interact with the site for a moment.
+                    </p>
+                  )}
+                  <p className="flex items-start gap-2 text-xs text-muted-foreground">
+                    <Share className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                    <span>
+                      <strong>iPhone / iPad (Safari):</strong> tap Share → <em>Add to Home Screen</em>. This uses the
+                      same logo as above.
+                    </span>
+                  </p>
+                </>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       <Card>
         <CardContent className="p-6 space-y-4">
