@@ -159,19 +159,21 @@ See `/.env.example` for the canonical list. Per-app `.env.example` files appear 
 | 9     | Resume Diff + Review                            | ✅ Done      |
 | 10    | Resume Editor + PDF export                      | ✅ Done      |
 | 11    | Notifications + Profile + Settings              | ✅ Done      |
-| 12    | PWA + AWS deployment + final polish             | 🔄 PWA done · AWS ⏳ |
+| 12    | PWA + AWS deployment + final polish             | 🔄 PWA done · [AWS guide](docs/DEPLOYMENT-AWS.md) |
 
 See `docs/ARCHITECTURE.md` for the longer-form architectural notes.
 
 ---
 
-## Deployment (preview — full guide arrives in Phase 12)
+## Deployment
+
+**Full AWS walkthrough:** [docs/DEPLOYMENT-AWS.md](docs/DEPLOYMENT-AWS.md) (S3 + CloudFront, ALB + EC2/EB, Atlas, env vars, OAuth, SPA routing, CI/CD outline).
 
 - **PWA** → `vite-plugin-pwa` generates a service worker and web manifest on `npm run build --workspace @hireboost/web`. Install from the browser (“Add to Home Screen” / install prompt). Icons and `theme-color` use the in-repo app logo (`public/app-logo.png`). Test with `npm run preview --workspace @hireboost/web` over **HTTPS** or **localhost** (required for service workers).
 - **Frontend** → Vite static build deployed to **AWS S3** behind **CloudFront** with SPA fallback to `index.html`.
-- **Backend** → Containerized Express server on **AWS EC2** or **Elastic Beanstalk**, fronted by ALB, talking to **MongoDB Atlas**.
+- **Backend** → Express on **EC2** or **Elastic Beanstalk** behind **ALB**, talking to **MongoDB Atlas**.
 - **Secrets** → AWS SSM Parameter Store / Secrets Manager (mapped to env vars at runtime).
-- **Health check** → `GET /api/v1/health` (added in Phase 3).
+- **Health check** → `GET /api/v1/health`.
 
 ---
 
