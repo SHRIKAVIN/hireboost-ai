@@ -15,19 +15,19 @@ const contactChannels = [
   {
     icon: Mail,
     label: 'Email us',
-    value: 'hello@hireboost.ai',
-    href: 'mailto:hello@hireboost.ai',
+    value: 'shrikavinkbs@gmail.com',
+    href: 'mailto:shrikavinkbs@gmail.com',
   },
   {
     icon: Phone,
     label: 'Call sales',
-    value: '+1 (415) 555-0143',
-    href: 'tel:+14155550143',
+    value: '+91 99652 78945',
+    href: 'tel:+91 99652 78945',
   },
   {
     icon: MessageSquare,
     label: 'In-app chat',
-    value: 'Mon–Fri · 9am–6pm PT',
+    value: 'Mon–Fri · 9am–6pm IST',
     href: '#',
   },
 ];

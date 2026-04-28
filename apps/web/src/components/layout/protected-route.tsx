@@ -13,7 +13,7 @@ import { useAuthStore } from '@/store/auth-store';
  * bounced to /login on every visit.
  */
 export function ProtectedRoute() {
-  const { isAuthenticated, accessToken, isHydrated, setSession, clear } = useAuthStore();
+  const { isAuthenticated, accessToken, user, isHydrated, setSession, clear } = useAuthStore();
   const location = useLocation();
   const [bootstrapping, setBootstrapping] = useState(false);
   const triedRef = useRef(false);
@@ -28,8 +28,12 @@ export function ProtectedRoute() {
     (async () => {
       try {
         const session = await trySilentRefreshSession();
-        if (session) setSession(session);
-        else clear();
+        if (session) {
+          setSession(session);
+        } else {
+          const { accessToken: tok } = useAuthStore.getState();
+          if (needsSilentRefresh(tok)) clear();
+        }
       } finally {
         setBootstrapping(false);
       }
@@ -40,7 +44,9 @@ export function ProtectedRoute() {
     return <PageLoader label="Restoring session…" />;
   }
 
-  if (!isAuthenticated) {
+  const accessTokenUsable = Boolean(accessToken) && !needsSilentRefresh(accessToken);
+  const hasPersistedSession = Boolean(user) && Boolean(accessToken);
+  if (!isAuthenticated && !accessTokenUsable && !hasPersistedSession) {
     return <Navigate to={ROUTES.auth.login} replace state={{ from: location }} />;
   }
 

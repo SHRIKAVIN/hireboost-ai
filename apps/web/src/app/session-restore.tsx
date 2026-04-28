@@ -27,6 +27,8 @@ export function SessionRestore(): null {
         setSession(session);
         return;
       }
+      const { accessToken: tokAfter } = useAuthStore.getState();
+      if (!needsSilentRefresh(tokAfter)) return;
       const { isAuthenticated: authed, accessToken: tok } = useAuthStore.getState();
       if (authed || tok) clear();
     })();

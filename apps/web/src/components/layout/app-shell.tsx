@@ -9,6 +9,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet';
+import { ROUTES } from '@/routes/paths';
 
 import { SidebarNav } from './sidebar-nav';
 import { Topbar } from './topbar';
@@ -26,7 +27,7 @@ export function AppShell() {
       {/* Desktop sidebar */}
       <aside className="hidden w-64 shrink-0 border-r border-border bg-card/40 lg:flex lg:flex-col">
         <div className="flex h-16 items-center border-b border-border px-5">
-          <Logo />
+          <Logo to={ROUTES.marketing.home} />
         </div>
         <SidebarNav />
       </aside>
@@ -36,7 +37,7 @@ export function AppShell() {
         <SheetContent side="left" className="w-72 p-0">
           <SheetHeader className="px-5 py-4">
             <SheetTitle>
-              <Logo size="sm" />
+              <Logo size="sm" to={ROUTES.marketing.home} />
             </SheetTitle>
           </SheetHeader>
           <SidebarNav onNavigate={() => setMobileOpen(false)} />
