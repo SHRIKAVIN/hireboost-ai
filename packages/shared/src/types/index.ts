@@ -163,6 +163,20 @@ export interface JobAnalysis {
   createdAt: string;
 }
 
+/**
+ * Lightweight projection of {@link JobAnalysis} returned by the list
+ * endpoint. Heavy fields (full JD text, full keyword list) are omitted
+ * to keep the payload small for sidebars / "recent" views.
+ */
+export interface JobAnalysisListItem {
+  id: string;
+  extractedRole: string;
+  seniorityLevel: SeniorityLevel;
+  topSkills: string[];
+  jobDescriptionPreview: string;
+  createdAt: string;
+}
+
 export interface AppNotification {
   id: string;
   userId: string;

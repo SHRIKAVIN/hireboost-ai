@@ -49,6 +49,15 @@ export const jobDescriptionSchema = z.object({
 });
 export type JobDescriptionInput = z.infer<typeof jobDescriptionSchema>;
 
+/**
+ * Query params for listing recent job analyses. The defaults give the
+ * UI a sane "last 10 analyses" feed without any explicit params.
+ */
+export const jobAnalysisListQuerySchema = z.object({
+  limit: z.coerce.number().int().min(1).max(50).default(10),
+});
+export type JobAnalysisListQuery = z.infer<typeof jobAnalysisListQuerySchema>;
+
 /* ---------------------- Contact form ---------------------- */
 
 export const contactFormSchema = z.object({
