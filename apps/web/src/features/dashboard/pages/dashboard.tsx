@@ -1,15 +1,11 @@
 import { Activity, FileSearch, FileText, Target } from 'lucide-react';
 
-import {
-  DEFAULT_WORKFLOW_STEPS,
-  WorkflowStepper,
-} from '@/components/shared/workflow-stepper';
+import { DEFAULT_WORKFLOW_STEPS } from '@/components/shared/workflow-stepper-data';
+import { WorkflowStepper } from '@/components/shared/workflow-stepper';
 
 import { QuickActions } from '../components/quick-actions';
-import {
-  RecentEmptyState,
-  dashboardEmptyStates,
-} from '../components/recent-empty-state';
+import { dashboardEmptyStates } from '../components/dashboard-empty-states';
+import { RecentEmptyState } from '../components/recent-empty-state';
 import { StatCard } from '../components/stat-card';
 
 export function DashboardPage() {

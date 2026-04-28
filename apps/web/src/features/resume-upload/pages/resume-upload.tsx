@@ -4,10 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import {
-  DEFAULT_WORKFLOW_STEPS,
-  WorkflowStepper,
-} from '@/components/shared/workflow-stepper';
+import { DEFAULT_WORKFLOW_STEPS } from '@/components/shared/workflow-stepper-data';
+import { WorkflowStepper } from '@/components/shared/workflow-stepper';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useJobIntakeStore } from '@/features/job-intake/store/job-intake-store';

@@ -1,5 +1,5 @@
 import type { ApiError as ApiErrorEnvelope, ApiResponse, AuthSession } from '@hireboost/shared';
-import axios, { AxiosError, type AxiosInstance, type AxiosRequestConfig } from 'axios';
+import axios, { type AxiosError, type AxiosInstance, type AxiosRequestConfig } from 'axios';
 
 import { env } from './env';
 

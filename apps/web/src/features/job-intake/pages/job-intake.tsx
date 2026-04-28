@@ -3,10 +3,8 @@ import { Sparkles } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
-import {
-  DEFAULT_WORKFLOW_STEPS,
-  WorkflowStepper,
-} from '@/components/shared/workflow-stepper';
+import { DEFAULT_WORKFLOW_STEPS } from '@/components/shared/workflow-stepper-data';
+import { WorkflowStepper } from '@/components/shared/workflow-stepper';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatApiError } from '@/lib/api-client';
 

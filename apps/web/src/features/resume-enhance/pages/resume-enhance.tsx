@@ -4,10 +4,8 @@ import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import {
-  DEFAULT_WORKFLOW_STEPS,
-  WorkflowStepper,
-} from '@/components/shared/workflow-stepper';
+import { DEFAULT_WORKFLOW_STEPS } from '@/components/shared/workflow-stepper-data';
+import { WorkflowStepper } from '@/components/shared/workflow-stepper';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -18,6 +16,8 @@ import { useResume } from '@/features/resume-upload/hooks/use-resume';
 import { useResumeStore } from '@/features/resume-upload/store/resume-store';
 import { formatApiError } from '@/lib/api-client';
 import { ROUTES } from '@/routes/paths';
+
+import { useResumeReviewStore } from '@/features/resume-diff/store/resume-review-store';
 
 import { useEnhanceResume } from '../hooks/use-ai-enhance';
 
@@ -60,6 +60,18 @@ export function ResumeEnhancePage() {
       setEnhanced(result.enhancedStructuredData);
       setHighlights(result.highlights);
       setMeta({ provider: result.provider, model: result.model });
+      if (originalResume) {
+        useResumeReviewStore.getState().setSession({
+          jobAnalysisId: currentAnalysisId,
+          resumeId,
+          original: originalResume.parsedData,
+          enhanced: result.enhancedStructuredData,
+          highlights: result.highlights,
+          provider: result.provider,
+          model: result.model,
+          updatedAt: new Date().toISOString(),
+        });
+      }
       toast.success('AI-enhanced resume ready', {
         description: `Powered by ${result.provider} · ${result.model}`,
       });
@@ -80,8 +92,8 @@ export function ResumeEnhancePage() {
         </h1>
         <p className="max-w-2xl text-sm text-muted-foreground">
           We send your structured resume plus the job analysis (including ATS gaps) to the
-          configured provider (Gemini or OpenAI). You get an improved JSON resume you can compare
-          and later diff in Phase 9.
+          configured provider (Gemini or OpenAI). Open <strong>Resume Diff</strong> next to inspect every
+          change before you pick a version for the editor.
         </p>
       </div>
 
@@ -111,6 +123,9 @@ export function ResumeEnhancePage() {
           <Button asChild variant="outline" size="sm">
             <Link to={ROUTES.app.atsReview}>ATS</Link>
           </Button>
+          <Button asChild variant="outline" size="sm">
+            <Link to={ROUTES.app.resumeDiff}>Diff</Link>
+          </Button>
         </div>
       </div>
 
@@ -135,12 +150,19 @@ export function ResumeEnhancePage() {
           <Wand2 className="h-4 w-4" />
           {enhanced ? 'Regenerate enhancement' : 'Generate AI-enhanced resume'}
         </Button>
-        {meta && (
-          <p className="text-xs text-muted-foreground">
-            Last run: <span className="font-mono">{meta.provider}</span> /{' '}
-            <span className="font-mono">{meta.model}</span>
-          </p>
-        )}
+        <div className="flex flex-col items-end gap-1">
+          {meta && (
+            <p className="text-xs text-muted-foreground">
+              Last run: <span className="font-mono">{meta.provider}</span> /{' '}
+              <span className="font-mono">{meta.model}</span>
+            </p>
+          )}
+          {enhanced && (
+            <Button asChild variant="outline" size="sm">
+              <Link to={ROUTES.app.resumeDiff}>Open diff & review</Link>
+            </Button>
+          )}
+        </div>
       </div>
 
       {highlights.length > 0 && (
